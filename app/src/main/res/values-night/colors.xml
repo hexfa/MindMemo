@@ -19,16 +19,14 @@
     <color name="red">#E91E63</color>
     <color name="aqua">#00BCD4</color>
     <color name="yellow">#FFC107</color>
-    <color name="green">#2fdf84</color>
+    <color name="green">#006D35</color>
     <color name="light_green">#40FA5E</color>
-    <color name="toolbarColor">@color/white</color>
-    <color name="backgroundColor">@color/white</color>
-    <color name="dark_green">@color/yellowLight</color>
-    <color name="category_background">@color/grayLight</color>
-    <color name="spinner_background">@color/white</color>
-    <color name="textColorBackground">@color/black</color>
+    <color name="toolbarColor">@color/black</color>
+    <color name="backgroundColor">#0E0E0E</color>
+    <color name="dark_green">#1C1F00</color>
+    <color name="category_background">#191919</color>
+    <color name="spinner_background">@color/dark_gray</color>
+    <color name="textColorBackground">@color/grayLight</color>
     <color name ="viewColorBackground">@color/dark_gray</color>
-
-
 
 </resources>

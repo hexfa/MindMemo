@@ -1,3 +1,35 @@
 <resources>
-    <string name="app_name">Mind Memo</string>
+    <string name="app_name">NoteAppCleanArchitecture</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title">Title</string>
+    <string name="description">Desctiption</string>
+    <string name="categories">Categories</string>
+    <string name="priority">Priority</string>
+    <string name="save">Save</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="search">Search</string>
+    <string name="my_note">My Note</string>
+    <string name="navigation_drawer_open">navigatoin_drawer_open</string>
+    <string name="navigation_drawer_close">navigaton_drawer_close</string>
+    <string name="lastname">Last name</string>
+    <string name="mail">Email</string>
+    <string name="firstname">First Name</string>
+    <string name="change_photo">Change photo</string>
+    <string name="setting">Setting</string>
+    <string name="about_us">About us</string>
+    <string name="privacy">PrivacyPolicy</string>
+    <string name="exit">Exit</string>
+    <string name="darkmode">DarkMode</string>
+    <string name="language">Language</string>
+    <string name="version">Version</string>
+    <string name="share_to_friends">Share to friends</string>
+    <string name="instagram_id">Instagram ID</string>
+    <string name="youtube_id">Youtube ID</string>
+    <string name="telgram_id">Telegram ID</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="aboutUs">About Us</string>
+    <string name="aboutUs2">About Us 2</string>
+    <string name="telgram">Telegram</string>
 </resources>
