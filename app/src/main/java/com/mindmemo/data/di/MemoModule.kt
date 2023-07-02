@@ -2,14 +2,13 @@ package com.mindmemo.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.noteappcleanarchitecture.data.db.NoteDatabase
-import com.example.noteappcleanarchitecture.data.entity.NoteEntity
 import com.example.noteappcleanarchitecture.data.repository.HomeRepositoryImpl
 import com.example.noteappcleanarchitecture.data.repository.NoteRepositoryImpl
 import com.mindmemo.data.utils.NOTE_DATABASE
 import com.example.noteappcleanarchitecture.domain.repository.HomeRepository
 import com.example.noteappcleanarchitecture.domain.repository.NoteRepository
 import com.mindmemo.data.db.MemoDatabase
+import com.mindmemo.data.entity.MemoEntity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +19,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NoteModule {
+object MemoModule {
 
     @Provides
     @Singleton
@@ -32,22 +31,22 @@ object NoteModule {
 
     @Provides
     @Singleton
-    fun provideDao(db: NoteDatabase) = db.noteDao()
+    fun provideDao(db: MemoDatabase) = db.memoDao()
 
     @Provides
     @Singleton
-    fun provideEntity() = NoteEntity()
+    fun provideEntity() = MemoEntity()
 
     @Provides
     @Singleton
-    fun provideNoteRepository(noteDataBase: NoteDatabase): NoteRepository {
-        return NoteRepositoryImpl(noteDataBase.noteDao())
+    fun provideNoteRepository(memoDataBase: MemoDatabase): NoteRepository {
+        return NoteRepositoryImpl(memoDataBase.memoDao())
     }
 
     @Provides
     @Singleton
-    fun provideMainRepository(noteDataBase: NoteDatabase):HomeRepository{
-        return HomeRepositoryImpl(noteDataBase.noteDao())
+    fun provideMainRepository(memoDataBase: MemoDatabase):HomeRepository{
+        return HomeRepositoryImpl(memoDataBase.memoDao())
     }
 
 }
