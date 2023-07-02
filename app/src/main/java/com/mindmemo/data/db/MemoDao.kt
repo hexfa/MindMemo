@@ -2,7 +2,7 @@ package com.mindmemo.data.db
 
 import androidx.room.*
 import com.example.noteappcleanarchitecture.data.entity.NoteEntity
-import com.example.noteappcleanarchitecture.data.utils.NOTE_TABLE
+import com.mindmemo.data.utils.NOTE_TABLE
 import kotlinx.coroutines.flow.Flow
 
 @Dao
