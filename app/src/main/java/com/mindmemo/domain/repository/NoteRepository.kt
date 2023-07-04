@@ -1,12 +1,12 @@
-package com.example.noteappcleanarchitecture.domain.repository
+package com.mindmemo.domain.repository
 
-import com.example.noteappcleanarchitecture.data.entity.NoteEntity
+import com.mindmemo.data.entity.MemoEntity
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
 
-    suspend fun saveNote(noteEntity: NoteEntity)
-    suspend fun updateNote(noteEntity: NoteEntity)
-    fun detailNote(id : Int) : Flow<NoteEntity>
+    suspend fun saveNote(noteEntity: MemoEntity)
+    suspend fun updateNote(noteEntity: MemoEntity)
+    fun detailNote(id : Int) : Flow<MemoEntity>
 
 }

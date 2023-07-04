@@ -1,6 +1,6 @@
 package com.example.noteappcleanarchitecture.domain.usecase
 
-import com.example.noteappcleanarchitecture.domain.repository.NoteRepository
+import com.mindmemo.domain.repository.NoteRepository
 import javax.inject.Inject
 
 class DetailUseCase @Inject constructor(private val noteRepository: NoteRepository) {

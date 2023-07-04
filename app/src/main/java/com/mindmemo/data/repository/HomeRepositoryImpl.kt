@@ -1,6 +1,6 @@
-package com.example.noteappcleanarchitecture.data.repository
+package com.mindmemo.data.repository
 
-import com.example.noteappcleanarchitecture.domain.repository.HomeRepository
+import com.mindmemo.domain.repository.HomeRepository
 import com.mindmemo.data.db.MemoDao
 import com.mindmemo.data.entity.MemoEntity
 import kotlinx.coroutines.flow.Flow

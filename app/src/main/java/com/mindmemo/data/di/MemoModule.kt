@@ -2,11 +2,11 @@ package com.mindmemo.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.noteappcleanarchitecture.data.repository.HomeRepositoryImpl
-import com.example.noteappcleanarchitecture.data.repository.NoteRepositoryImpl
-import com.mindmemo.data.utils.NOTE_DATABASE
-import com.example.noteappcleanarchitecture.domain.repository.HomeRepository
-import com.example.noteappcleanarchitecture.domain.repository.NoteRepository
+import com.mindmemo.data.repository.HomeRepositoryImpl
+import com.mindmemo.data.repository.NoteRepositoryImpl
+import com.mindmemo.data.utils.MEMO_DATABASE
+import com.mindmemo.domain.repository.HomeRepository
+import com.mindmemo.domain.repository.NoteRepository
 import com.mindmemo.data.db.MemoDatabase
 import com.mindmemo.data.entity.MemoEntity
 import dagger.Module
@@ -24,7 +24,7 @@ object MemoModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(
-        context, MemoDatabase::class.java, NOTE_DATABASE
+        context, MemoDatabase::class.java, MEMO_DATABASE
     ).allowMainThreadQueries()
         .fallbackToDestructiveMigration()
         .build()
@@ -45,7 +45,7 @@ object MemoModule {
 
     @Provides
     @Singleton
-    fun provideMainRepository(memoDataBase: MemoDatabase):HomeRepository{
+    fun provideMainRepository(memoDataBase: MemoDatabase): HomeRepository {
         return HomeRepositoryImpl(memoDataBase.memoDao())
     }
 

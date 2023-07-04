@@ -1,7 +1,7 @@
-package com.example.noteappcleanarchitecture.domain.usecase
+package com.mindmemo.domain.usecase
 
 import com.example.noteappcleanarchitecture.data.entity.NoteEntity
-import com.example.noteappcleanarchitecture.domain.repository.HomeRepository
+import com.mindmemo.domain.repository.HomeRepository
 import javax.inject.Inject
 
 class DeleteUseCase @Inject constructor(private val homeRepository: HomeRepository) {

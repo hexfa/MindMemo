@@ -1,12 +1,12 @@
-package com.example.noteappcleanarchitecture.domain.repository
+package com.mindmemo.domain.repository
 
-import com.example.noteappcleanarchitecture.data.entity.NoteEntity
+import com.mindmemo.data.entity.MemoEntity
 import kotlinx.coroutines.flow.Flow
 
 interface HomeRepository {
 
-    fun getAllNote() : Flow<MutableList<NoteEntity>>
-    fun searchNotes(search: String) : Flow<MutableList<NoteEntity>>
-    suspend fun deleteNote(entity: NoteEntity)
+    fun getAllNote() : Flow<MutableList<MemoEntity>>
+    fun searchNotes(search: String) : Flow<MutableList<MemoEntity>>
+    suspend fun deleteNote(entity: MemoEntity)
 
 }
