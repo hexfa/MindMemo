@@ -1,4 +1,4 @@
-package com.example.noteappcleanarchitecture.domain.usecase
+package com.mindmemo.domain.usecase
 
 import com.mindmemo.domain.repository.NoteRepository
 import javax.inject.Inject
