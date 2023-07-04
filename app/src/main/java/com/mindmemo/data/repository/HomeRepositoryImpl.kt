@@ -1,21 +1,21 @@
 package com.example.noteappcleanarchitecture.data.repository
 
-import com.example.noteappcleanarchitecture.data.db.NoteDao
-import com.example.noteappcleanarchitecture.data.entity.NoteEntity
 import com.example.noteappcleanarchitecture.domain.repository.HomeRepository
+import com.mindmemo.data.db.MemoDao
+import com.mindmemo.data.entity.MemoEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class HomeRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : HomeRepository {
-    override fun getAllNote(): Flow<MutableList<NoteEntity>> {
+class HomeRepositoryImpl @Inject constructor(private val noteDao: MemoDao) : HomeRepository {
+    override fun getAllNote(): Flow<MutableList<MemoEntity>> {
         return noteDao.getAllNotes()
     }
 
-    override fun searchNotes(search: String): Flow<MutableList<NoteEntity>> {
+    override fun searchNotes(search: String): Flow<MutableList<MemoEntity>> {
         return noteDao.searchNote(search)
     }
 
-    override suspend fun deleteNote(entity: NoteEntity) {
+    override suspend fun deleteNote(entity: MemoEntity) {
         noteDao.deleteNote(entity)
     }
 }

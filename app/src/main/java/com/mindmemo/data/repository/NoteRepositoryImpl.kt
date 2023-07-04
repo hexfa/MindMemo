@@ -3,10 +3,11 @@ package com.example.noteappcleanarchitecture.data.repository
 import com.example.noteappcleanarchitecture.data.db.NoteDao
 import com.example.noteappcleanarchitecture.data.entity.NoteEntity
 import com.example.noteappcleanarchitecture.domain.repository.NoteRepository
+import com.mindmemo.data.db.MemoDao
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class NoteRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : NoteRepository {
+class NoteRepositoryImpl @Inject constructor(private val noteDao: MemoDao) : NoteRepository {
     override suspend fun saveNote(noteEntity: NoteEntity) {
         noteDao.saveNote(noteEntity)
     }
