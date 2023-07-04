@@ -1,6 +1,6 @@
-package com.example.noteappcleanarchitecture.data.utils
+package com.mindmemo.data.utils
 
-data class DataStatus<out T>(val status : Status,val data : T?=null , val isEmpty : Boolean) {
+data class DataStatus<out T>(val status : Status, val data : T?=null, val isEmpty : Boolean) {
 
     enum class Status {
         SUCCESS

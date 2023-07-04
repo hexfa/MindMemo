@@ -1,4 +1,4 @@
-package com.example.noteappcleanarchitecture.data.utils
+package com.mindmemo.data.utils
 
 import android.R
 import android.view.View
