@@ -18,9 +18,9 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.example.noteappcleanarchitecture.R
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.mindmemo.R
 import java.util.HashMap
 import kotlin.math.round
 

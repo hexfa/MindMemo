@@ -8,17 +8,25 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.noteappcleanarchitecture.R
-import com.example.noteappcleanarchitecture.data.entity.NoteEntity
-import com.example.noteappcleanarchitecture.data.utils.*
-import com.example.noteappcleanarchitecture.databinding.ItemNoteBinding
+import com.mindmemo.R
+import com.mindmemo.data.entity.MemoEntity
+import com.mindmemo.data.utils.DELETE
+import com.mindmemo.data.utils.EDIT
+import com.mindmemo.data.utils.EDUCATION
+import com.mindmemo.data.utils.HEALTH
+import com.mindmemo.data.utils.HIGH
+import com.mindmemo.data.utils.HOME
+import com.mindmemo.data.utils.LOW
+import com.mindmemo.data.utils.NORMAL
+import com.mindmemo.data.utils.WORK
+import com.mindmemo.databinding.ItemNoteBinding
 import javax.inject.Inject
 
 class MemoAdapter @Inject constructor() : RecyclerView.Adapter<MemoAdapter.ViewHolder>() {
 
     private lateinit var binding: ItemNoteBinding
     private lateinit var context: Context
-    private var moviesList = emptyList<NoteEntity>()
+    private var moviesList = emptyList<MemoEntity>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         binding = ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -38,7 +46,7 @@ class MemoAdapter @Inject constructor() : RecyclerView.Adapter<MemoAdapter.ViewH
     inner class ViewHolder : RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: NoteEntity) {
+        fun bind(item: MemoEntity) {
             binding.apply {
                 titleTxt.text = item.title
                 descTxt.text = item.disc
@@ -81,20 +89,20 @@ class MemoAdapter @Inject constructor() : RecyclerView.Adapter<MemoAdapter.ViewH
         }
     }
 
-    private var onItemClickListener: ((NoteEntity, String) -> Unit)? = null
+    private var onItemClickListener: ((MemoEntity, String) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (NoteEntity, String) -> Unit) {
+    fun setOnItemClickListener(listener: (MemoEntity, String) -> Unit) {
         onItemClickListener = listener
     }
 
-    fun setData(data: List<NoteEntity>) {
+    fun setData(data: List<MemoEntity>) {
         val moviesDiffUtil = NotesDiffUtils(moviesList, data)
         val diffUtils = DiffUtil.calculateDiff(moviesDiffUtil)
         moviesList = data
         diffUtils.dispatchUpdatesTo(this)
     }
 
-    class NotesDiffUtils(private val oldItem: List<NoteEntity>, private val newItem: List<NoteEntity>) : DiffUtil.Callback() {
+    class NotesDiffUtils(private val oldItem: List<MemoEntity>, private val newItem: List<MemoEntity>) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int {
             return oldItem.size
