@@ -1,6 +1,5 @@
 package com.mindmemo.presentation.ui
 
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -17,15 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.noteappcleanarchitecture.R
-import com.example.noteappcleanarchitecture.data.entity.NoteEntity
-import com.example.noteappcleanarchitecture.data.utils.BUNDLE_ID
-import com.example.noteappcleanarchitecture.data.utils.DELETE
-import com.example.noteappcleanarchitecture.data.utils.EDIT
-import com.example.noteappcleanarchitecture.databinding.FragmentHomeBinding
-import com.example.noteappcleanarchitecture.databinding.HeaderDrawerLayoutBinding
-import com.example.noteappcleanarchitecture.presentation.adapter.NoteAdapter
-import com.example.noteappcleanarchitecture.presentation.viewmodel.HomeViewModel
+import com.mindmemo.presentation.viewmodel.HomeViewModel
 import com.google.android.material.navigation.NavigationView
 import com.mindmemo.data.entity.MemoEntity
 import com.mindmemo.databinding.FragmentHomeBinding
