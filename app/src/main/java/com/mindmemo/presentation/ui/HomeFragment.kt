@@ -18,7 +18,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mindmemo.presentation.viewmodel.HomeViewModel
 import com.google.android.material.navigation.NavigationView
+import com.mindmemo.R
 import com.mindmemo.data.entity.MemoEntity
+import com.mindmemo.data.utils.BUNDLE_ID
+import com.mindmemo.data.utils.DELETE
+import com.mindmemo.data.utils.EDIT
 import com.mindmemo.databinding.FragmentHomeBinding
 import com.mindmemo.databinding.HeaderDrawerLayoutBinding
 import com.mindmemo.presentation.adapter.MemoAdapter

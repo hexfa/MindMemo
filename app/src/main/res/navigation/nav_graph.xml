@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashScreenFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.noteappcleanarchitecture.presentation.ui.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_noteFragment"
+            app:destination="@id/noteFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment2"
+            app:destination="@id/profileFragment2" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingFragment2"
+            app:destination="@id/settingFragment2" />
+    </fragment>
+    <dialog
+        android:id="@+id/noteFragment"
+        android:name="com.example.noteappcleanarchitecture.presentation.ui.NoteFragment"
+        android:label="NoteFragment"
+        tools:layout="@layout/fragment_note">
+        <argument
+            android:name="noteID"
+            app:argType="integer" />
+    </dialog>
+    <fragment
+        android:id="@+id/profileFragment2"
+        android:name="com.example.noteappcleanarchitecture.presentation.ui.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/settingFragment2"
+        android:name="com.example.noteappcleanarchitecture.presentation.ui.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.example.noteappcleanarchitecture.presentation.ui.SplashScreenFragment"
+        android:label="fragment_splash_screen"
+        tools:layout="@layout/fragment_splash_screen" >
+        <action
+            android:id="@+id/action_splashScreenFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+</navigation>
