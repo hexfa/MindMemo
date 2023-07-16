@@ -1,6 +1,6 @@
 package com.mindmemo.data.utils
 
-const val NOTE_TABLE = "note_table"
+const val MEMO_TABLE = "memo_table"
 const val MEMO_DATABASE = "memo_database"
 
 

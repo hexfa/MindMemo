@@ -31,9 +31,8 @@ import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 
-@AndroidEntryPoint
 class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
-    private lateinit var binding: FragmentHomeBinding
+    private lateinit var binding:FragmentHomeBinding
     lateinit var headerDrawerLayoutBinding: HeaderDrawerLayoutBinding
 
 

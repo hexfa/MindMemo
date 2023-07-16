@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.noteappcleanarchitecture.presentation.ui.HomeFragment"
+        android:name="com.mindmemo.presentation.ui.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <dialog
         android:id="@+id/noteFragment"
-        android:name="com.example.noteappcleanarchitecture.presentation.ui.NoteFragment"
+        android:name="com.mindmemo.presentation.ui.NoteFragment"
         android:label="NoteFragment"
         tools:layout="@layout/fragment_note">
         <argument
@@ -31,17 +31,17 @@
     </dialog>
     <fragment
         android:id="@+id/profileFragment2"
-        android:name="com.example.noteappcleanarchitecture.presentation.ui.ProfileFragment"
+        android:name="com.mindmemo.presentation.ui.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/settingFragment2"
-        android:name="com.example.noteappcleanarchitecture.presentation.ui.SettingFragment"
+        android:name="com.mindmemo.presentation.ui.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
     <fragment
         android:id="@+id/splashScreenFragment"
-        android:name="com.example.noteappcleanarchitecture.presentation.ui.SplashScreenFragment"
+        android:name="com.mindmemo.presentation.ui.SplashScreenFragment"
         android:label="fragment_splash_screen"
         tools:layout="@layout/fragment_splash_screen" >
         <action
