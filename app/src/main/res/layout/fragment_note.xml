@@ -139,7 +139,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <!--Save-->
-    <com.google.android.material.button.MaterialButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/saveNote"
         android:layout_width="wrap_content"
         android:layout_height="55dp"
