@@ -19,9 +19,9 @@ import com.mindmemo.R
 fun SplashScreen(navController: NavController) {
     LaunchedEffect(Unit) {
         kotlinx.coroutines.delay(2000)
-//        navController.navigate("home") {
-//            popUpTo("splash") { inclusive = true }
-//        }
+        navController.navigate("home") {
+            popUpTo("splash") { inclusive = true }
+        }
     }
 
     Box(
