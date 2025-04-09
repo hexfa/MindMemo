@@ -31,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -38,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.mindmemo.data.entity.MemoEntity
 import com.mindmemo.data.utils.HIGH
 import com.mindmemo.data.utils.NORMAL
@@ -46,9 +48,14 @@ import com.mindmemo.presentation.viewmodel.HomeViewModel
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
+    navController: NavController
 ) {
 
     val notesState by viewModel.getAllNotes.collectAsState(initial = null)
+
+    LaunchedEffect(Unit) {
+        viewModel.getAll()
+    }
 
     Scaffold(
         topBar = {
@@ -56,7 +63,7 @@ fun HomeScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {},
+                onClick = { navController.navigate("note") },
                 shape = RoundedCornerShape(50),
                 containerColor = MaterialTheme.colorScheme.primary
             ) {

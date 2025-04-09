@@ -4,9 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mindmemo.data.entity.MemoEntity
 import com.mindmemo.data.utils.DataStatus
-import com.mindmemo.data.utils.HIGH
-import com.mindmemo.data.utils.LOW
-import com.mindmemo.data.utils.NORMAL
 import com.mindmemo.domain.usecase.AllNoteUseCase
 import com.mindmemo.domain.usecase.DeleteUseCase
 import com.mindmemo.domain.usecase.SearchUseCase
@@ -30,43 +27,6 @@ class HomeViewModel @Inject constructor(
     private val _searchNotes: MutableStateFlow<DataStatus<List<MemoEntity>>?> =
         MutableStateFlow(null)
     val searchNotes = _searchNotes.asStateFlow()
-
-    //todo remove
-    //test data
-    init {
-        val initialNotes = listOf(
-            MemoEntity(id = 1, title = "Title 1", disc = "", category = "", priority = NORMAL),
-            MemoEntity(
-                id = 2,
-                title = "Title 2",
-                disc = "Description for note 2  Description for note 2",
-                category = "",
-                priority = LOW
-            ),
-            MemoEntity(
-                id = 3,
-                title = "Title 3",
-                disc = "Description for note 3",
-                category = "",
-                priority = HIGH
-            ),
-            MemoEntity(
-                id = 4,
-                title = "Title 4",
-                disc = "Description for note 4",
-                category = "",
-                priority = LOW
-            ),
-            MemoEntity(
-                id = 5,
-                title = "Title 5",
-                disc = "Description for note 5",
-                category = "",
-                priority = NORMAL
-            )
-        )
-        _getAllNotes.value = DataStatus.success(initialNotes, false)
-    }
 
     fun getAll() = viewModelScope.launch {
         allNoteUseCase.getAllNote().collect {
