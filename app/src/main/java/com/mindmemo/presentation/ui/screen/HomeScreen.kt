@@ -80,6 +80,7 @@ fun HomeScreen(
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp),
             notes = notesState?.data ?: emptyList(),
+            navController = navController
         )
     }
 }
@@ -141,7 +142,8 @@ fun CustomToolbar() {
 @Composable
 fun NoteListContent(
     notes: List<MemoEntity>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
     if (notes.isEmpty()) {
         Box(
@@ -163,7 +165,7 @@ fun NoteListContent(
             items(notes.size) { index ->
                 val note = notes[index]
                 NoteItem(
-                    note = note,
+                    note = note, navController = navController
                 )
             }
         }
@@ -181,13 +183,15 @@ fun getPriorityColor(priority: String): Color {
 @Composable
 fun NoteItem(
     note: MemoEntity,
+    navController: NavController
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(4.dp),
+        onClick = { navController.navigate("note?noteId=${note.id}") }
     ) {
         Row(
             modifier = Modifier

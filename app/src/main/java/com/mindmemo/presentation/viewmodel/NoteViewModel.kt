@@ -31,7 +31,7 @@ class NoteViewModel @Inject constructor(
     private val updateUseCase: UpdateUseCase,
     private val detailUseCase: DetailUseCase
 ) : ViewModelBase() {
-    //Spinners
+
     val categoriesList = MutableLiveData<MutableList<String>>()
     val prioritiesList = mutableListOf(HIGH, NORMAL, LOW)
     private val _detailNote: MutableStateFlow<DataStatus<MemoEntity>?> = MutableStateFlow(null)
@@ -45,10 +45,6 @@ class NoteViewModel @Inject constructor(
 
     var priority by mutableStateOf(NORMAL)
         private set
-
-    init {
-        loadCategoriesData()
-    }
 
     fun onTitleChanged(newTitle: String) {
         if (newTitle.count { it == '\n' } < 2) {
@@ -65,34 +61,38 @@ class NoteViewModel @Inject constructor(
     }
 
     fun loadCategoriesData() = launchWithDispatchers {
-//        val data = mutableListOf(WORK, EDUCATION, HOME, HEALTH)
         categoriesList.postValue(mutableListOf(WORK, EDUCATION, HOME, HEALTH))
     }
 
-    fun saveOrEditNote(isEdit: Boolean, entity: MemoEntity) = viewModelScope.launch {
-        if (isEdit) {
-            updateUseCase.updateNote(entity)
-        } else {
-            saveUseCase.saveNote(entity)
-        }
+    fun saveNote() = launchWithState {
+        if (description.isEmpty()) NotificationService.showError("Please Enter Description")
+        else saveUseCase.saveNote(
+            MemoEntity(
+                title = title,
+                disc = description,
+                priority = priority
+            )
+        )
     }
 
-    fun createNote() {
-        launchWithState {
-            if (description.isEmpty()) NotificationService.showError("Please Enter Description")
-            else saveUseCase.saveNote(
-                MemoEntity(
-                    title = title,
-                    disc = description,
-                    priority = priority
-                )
+    fun updateNote(id: Int) = launchWithState {
+        updateUseCase.updateNote(
+            MemoEntity(
+                id = id,
+                title = title,
+                disc = description,
+                priority = priority
             )
-        }
+        )
     }
 
     fun getDetail(id: Int) = viewModelScope.launch {
-        detailUseCase.detailNote(id).collect {
-            _detailNote.value = DataStatus.success(it, false)
+        detailUseCase.detailNote(id).collect { memo ->
+            _detailNote.value = DataStatus.success(memo, false)
+
+            title = memo.title
+            description = memo.disc
+            priority = memo.priority
         }
     }
 }

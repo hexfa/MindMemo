@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,13 +30,18 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(
+    navController: NavController,
     viewModel: NoteViewModel = hiltViewModel(),
-    navController: NavController
+    noteId: Int?
 ) {
     val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
     var priorityExpanded by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(noteId) {
+        noteId?.let { viewModel.getDetail(it) }
+    }
 
     Scaffold(
         topBar = {
@@ -50,7 +56,12 @@ fun NoteScreen(
                     IconButton(onClick = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.createNote()
+
+                        if (noteId != null) {
+                            viewModel.updateNote(noteId)
+                        } else {
+                            viewModel.saveNote()
+                        }
                     }) {
                         Icon(Icons.Default.Check, contentDescription = "OK")
                     }
