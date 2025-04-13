@@ -1,5 +1,6 @@
 package com.mindmemo.presentation.ui.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
@@ -24,10 +25,12 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Brightness2
 import androidx.compose.material.icons.filled.Brightness7
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ViewList
@@ -43,11 +46,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mindmemo.data.entity.MemoEntity
@@ -62,13 +72,22 @@ fun HomeScreen(
     themeViewModel: ThemeViewModel = hiltViewModel(),
     navController: NavController
 ) {
-
     val notesState by viewModel.getAllNotes.collectAsState(initial = null)
+    val searchState by viewModel.searchNotes.collectAsState(initial = null)
     val isGrid by viewModel.isGridView.collectAsState(initial = true)
     val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
+    var isSearchMode by remember { mutableStateOf(false) }
+    var searchText by remember { mutableStateOf("") }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(Unit) {
         viewModel.getAll()
+    }
+
+    BackHandler(enabled = isSearchMode) {
+        keyboardController?.hide()
+        searchText = ""
+        isSearchMode = false
     }
 
     Scaffold(
@@ -76,6 +95,18 @@ fun HomeScreen(
             CustomToolbar(
                 isGrid = isGrid,
                 isDarkTheme = isDarkTheme,
+                isSearchMode = isSearchMode,
+                searchText = searchText,
+                onSearchTextChange = {
+                    searchText = it
+                    viewModel.searchNote(it)
+                },
+                onSearchClick = {
+                    if (isSearchMode) {
+                        searchText = ""
+                    }
+                    isSearchMode = !isSearchMode
+                },
                 onToggleLayout = { viewModel.toggleGridView(!isGrid) },
                 onToggleTheme = { themeViewModel.toggleTheme(!isDarkTheme) }
             )
@@ -94,21 +125,32 @@ fun HomeScreen(
             }
         }
     ) { paddingValues ->
+        val notes = if (searchText.isNotBlank()) {
+            searchState?.data ?: emptyList()
+        } else {
+            notesState?.data ?: emptyList()
+        }
+
         NoteListContent(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp),
-            notes = notesState?.data ?: emptyList(),
+            notes = notes,
             navController = navController,
             isGrid = isGrid
         )
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CustomToolbar(
     isGrid: Boolean,
     isDarkTheme: Boolean,
+    isSearchMode: Boolean,
+    searchText: String,
+    onSearchTextChange: (String) -> Unit,
+    onSearchClick: () -> Unit,
     onToggleLayout: () -> Unit,
     onToggleTheme: () -> Unit
 ) {
@@ -120,20 +162,68 @@ fun CustomToolbar(
     ) {
         Box(
             modifier = Modifier
-                .padding(end = 8.dp)
                 .weight(1f)
-                .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(50))
-                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .padding(end = 8.dp)
         ) {
-            Text(
-                text = "Notes",
-                color = Color.White,
-            )
+            AnimatedContent(
+                targetState = isSearchMode,
+                transitionSpec = {
+                    fadeIn() with fadeOut()
+                },
+                label = "Search vs Title"
+            ) { targetIsSearch ->
+                if (targetIsSearch) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White, RoundedCornerShape(50))
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        BasicTextField(
+                            value = searchText,
+                            onValueChange = onSearchTextChange,
+                            singleLine = true,
+                            textStyle = TextStyle.Default.copy(
+                                fontSize = 16.sp,
+                                color = Color.Black
+                            ),
+                            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp)
+                        )
+                        if (searchText.isNotEmpty()) {
+                            IconButton(onClick = {
+                                onSearchTextChange("")
+                                onSearchClick()
+                            }) {
+                                Icon(Icons.Default.Close, contentDescription = "Clear Search")
+                            }
+                        }
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                MaterialTheme.colorScheme.primary,
+                                shape = RoundedCornerShape(50)
+                            )
+                            .padding(horizontal = 16.dp, vertical = 16.dp)
+                    ) {
+                        Text("Notes", color = Color.White)
+                    }
+                }
+            }
         }
 
-        Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             IconButton(
-                onClick = { },
+                onClick = onSearchClick,
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.primary, CircleShape)
             ) {
@@ -146,11 +236,12 @@ fun CustomToolbar(
                     .background(MaterialTheme.colorScheme.primary, CircleShape)
             ) {
                 Icon(
-                    imageVector = if (isGrid) Icons.Filled.ViewList else Icons.Filled.GridView, // اینجا می‌تونی آیکون متفاوت بزاری مثل List و Grid
+                    imageVector = if (isGrid) Icons.Filled.ViewList else Icons.Filled.GridView,
                     contentDescription = "Toggle Layout",
-                    tint = Color.White,
+                    tint = Color.White
                 )
             }
+
             IconButton(
                 onClick = onToggleTheme,
                 modifier = Modifier
@@ -159,7 +250,7 @@ fun CustomToolbar(
                 Icon(
                     imageVector = if (isDarkTheme) Icons.Filled.Brightness7 else Icons.Filled.Brightness2,
                     contentDescription = "Toggle Theme",
-                    tint = Color.White,
+                    tint = Color.White
                 )
             }
         }
