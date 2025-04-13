@@ -1,12 +1,16 @@
 package com.mindmemo.presentation.ui.screen
 
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Column
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,13 +19,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -38,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mindmemo.data.entity.MemoEntity
@@ -52,14 +60,23 @@ fun HomeScreen(
 ) {
 
     val notesState by viewModel.getAllNotes.collectAsState(initial = null)
+    val isGrid by viewModel.isGridView.collectAsState(initial = true)
+//    val isDarkTheme by viewModel.isDarkTheme.collectAsState(initial = false)
 
     LaunchedEffect(Unit) {
         viewModel.getAll()
     }
 
+//    val backgroundColor = if (isDarkTheme) Color.Black else Color.White
+
     Scaffold(
         topBar = {
-            CustomToolbar()
+            CustomToolbar(
+                isGrid = isGrid,
+//                isDarkTheme = isDarkTheme,
+                onToggleLayout = { viewModel.toggleGridView(!isGrid) },
+//                onToggleTheme = { viewModel.toggleTheme(!isDarkTheme) }
+            )
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -80,20 +97,25 @@ fun HomeScreen(
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp),
             notes = notesState?.data ?: emptyList(),
-            navController = navController
+            navController = navController,
+            isGrid = isGrid
         )
     }
 }
 
 @Composable
-fun CustomToolbar() {
+fun CustomToolbar(
+    isGrid: Boolean,
+//    isDarkTheme: Boolean,
+    onToggleLayout: () -> Unit,
+//    onToggleTheme: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Box(
             modifier = Modifier
                 .padding(end = 8.dp)
@@ -107,66 +129,89 @@ fun CustomToolbar() {
             )
         }
 
-        Row(
-            modifier = Modifier,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
+        Row(horizontalArrangement = Arrangement.SpaceEvenly) {
             IconButton(
                 onClick = { },
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.primary, CircleShape)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search",
-                    tint = Color.White,
-                )
+                Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
             }
 
             IconButton(
-                onClick = { },
+                onClick = onToggleLayout,
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.primary, CircleShape)
             ) {
                 Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Grid/List",
+                    imageVector = if (isGrid) Icons.Filled.ViewList else Icons.Filled.GridView, // اینجا می‌تونی آیکون متفاوت بزاری مثل List و Grid
+                    contentDescription = "Toggle Layout",
                     tint = Color.White,
                 )
             }
+//            IconButton(
+//                onClick = onToggleTheme,
+//                modifier = Modifier
+//                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+//            ) {
+//                Icon(
+//                    imageVector = if (isDarkTheme) Icons.Filled.Brightness7 else Icons.Filled.Brightness2,
+//                    contentDescription = "Toggle Theme",
+//                    tint = Color.White,
+//                )
+//            }
         }
     }
 }
 
-
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NoteListContent(
     notes: List<MemoEntity>,
+    navController: NavController,
     modifier: Modifier = Modifier,
-    navController: NavController
+    isGrid: Boolean
 ) {
-    if (notes.isEmpty()) {
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(32.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("No notes yet!", style = MaterialTheme.typography.bodyLarge)
-        }
-    } else {
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2),
-            modifier = modifier.fillMaxSize(),
-            verticalItemSpacing = 8.dp,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(8.dp)
-        ) {
-            items(notes.size) { index ->
-                val note = notes[index]
-                NoteItem(
-                    note = note, navController = navController
-                )
+    AnimatedContent(
+        targetState = isGrid,
+        transitionSpec = {
+            fadeIn() with fadeOut()
+        },
+        label = "Grid/List Animation"
+    ) { targetIsGrid ->
+        if (notes.isEmpty()) {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("No notes yet!", style = MaterialTheme.typography.bodyLarge)
+            }
+        } else {
+            if (targetIsGrid) {
+                LazyVerticalStaggeredGrid(
+                    columns = StaggeredGridCells.Fixed(2),
+                    modifier = modifier.fillMaxSize(),
+                    verticalItemSpacing = 8.dp,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(8.dp)
+                ) {
+                    items(notes.size) { index ->
+                        val note = notes[index]
+                        NoteItem(note = note, navController = navController)
+                    }
+                }
+            } else {
+                LazyColumn(
+                    modifier = modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(notes.size) { index ->
+                        NoteItem(note = notes[index], navController = navController)
+                    }
+                }
             }
         }
     }

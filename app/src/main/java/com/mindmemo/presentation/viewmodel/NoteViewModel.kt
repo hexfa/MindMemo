@@ -1,8 +1,9 @@
 package com.mindmemo.presentation.viewmodel
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.mindmemo.data.entity.MemoEntity
 import com.mindmemo.data.utils.DataStatus
 import com.mindmemo.data.utils.EDUCATION
@@ -12,19 +13,16 @@ import com.mindmemo.data.utils.HOME
 import com.mindmemo.data.utils.LOW
 import com.mindmemo.data.utils.NORMAL
 import com.mindmemo.data.utils.WORK
+import com.mindmemo.domain.usecase.DeleteUseCase
 import com.mindmemo.domain.usecase.DetailUseCase
 import com.mindmemo.domain.usecase.SaveUseCase
 import com.mindmemo.domain.usecase.UpdateUseCase
+import com.mindmemo.presentation.base.ViewModelBase
+import com.mindmemo.presentation.notification.NotificationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import com.mindmemo.domain.usecase.DeleteUseCase
-import com.mindmemo.presentation.base.ViewModelBase
-import com.mindmemo.presentation.notification.NotificationService
 
 @HiltViewModel
 class NoteViewModel @Inject constructor(
@@ -88,7 +86,7 @@ class NoteViewModel @Inject constructor(
         )
     }
 
-    fun getDetail(id: Int) = viewModelScope.launch {
+    fun getDetail(id: Int) = launchWithState {
         detailUseCase.detailNote(id).collect { memo ->
             if (memo != null) {
                 _detailNote.value = DataStatus.success(memo, false)
@@ -99,7 +97,7 @@ class NoteViewModel @Inject constructor(
         }
     }
 
-    fun deleteNote(noteId: Int) = viewModelScope.launch {
+    fun deleteNote(noteId: Int) = launchWithState {
         deleteUseCase.deleteNote(noteId)
         title = ""
         description = ""

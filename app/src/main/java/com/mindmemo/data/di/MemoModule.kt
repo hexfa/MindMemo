@@ -2,13 +2,16 @@ package com.mindmemo.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.mindmemo.data.datastore.SettingDataSource
+import com.mindmemo.data.db.MemoDatabase
+import com.mindmemo.data.entity.MemoEntity
 import com.mindmemo.data.repository.HomeRepositoryImpl
 import com.mindmemo.data.repository.NoteRepositoryImpl
+import com.mindmemo.data.repository.SettingRepositoryImp
 import com.mindmemo.data.utils.MEMO_DATABASE
 import com.mindmemo.domain.repository.HomeRepository
 import com.mindmemo.domain.repository.NoteRepository
-import com.mindmemo.data.db.MemoDatabase
-import com.mindmemo.data.entity.MemoEntity
+import com.mindmemo.domain.repository.SettingRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,4 +52,15 @@ object MemoModule {
         return HomeRepositoryImpl(memoDataBase.memoDao())
     }
 
+    @Provides
+    @Singleton
+    fun provideSettingRepository(settingDataSource: SettingDataSource): SettingRepository {
+        return SettingRepositoryImp(settingDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideThemeDataSource(@ApplicationContext context: Context): SettingDataSource {
+        return SettingDataSource(context)
+    }
 }
