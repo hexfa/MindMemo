@@ -26,6 +26,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Brightness2
+import androidx.compose.material.icons.filled.Brightness7
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ViewList
@@ -52,30 +54,30 @@ import com.mindmemo.data.entity.MemoEntity
 import com.mindmemo.data.utils.HIGH
 import com.mindmemo.data.utils.NORMAL
 import com.mindmemo.presentation.viewmodel.HomeViewModel
+import com.mindmemo.presentation.viewmodel.ThemeViewModel
 
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
+    themeViewModel: ThemeViewModel = hiltViewModel(),
     navController: NavController
 ) {
 
     val notesState by viewModel.getAllNotes.collectAsState(initial = null)
     val isGrid by viewModel.isGridView.collectAsState(initial = true)
-//    val isDarkTheme by viewModel.isDarkTheme.collectAsState(initial = false)
+    val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.getAll()
     }
 
-//    val backgroundColor = if (isDarkTheme) Color.Black else Color.White
-
     Scaffold(
         topBar = {
             CustomToolbar(
                 isGrid = isGrid,
-//                isDarkTheme = isDarkTheme,
+                isDarkTheme = isDarkTheme,
                 onToggleLayout = { viewModel.toggleGridView(!isGrid) },
-//                onToggleTheme = { viewModel.toggleTheme(!isDarkTheme) }
+                onToggleTheme = { themeViewModel.toggleTheme(!isDarkTheme) }
             )
         },
         floatingActionButton = {
@@ -106,9 +108,9 @@ fun HomeScreen(
 @Composable
 fun CustomToolbar(
     isGrid: Boolean,
-//    isDarkTheme: Boolean,
+    isDarkTheme: Boolean,
     onToggleLayout: () -> Unit,
-//    onToggleTheme: () -> Unit
+    onToggleTheme: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -149,17 +151,17 @@ fun CustomToolbar(
                     tint = Color.White,
                 )
             }
-//            IconButton(
-//                onClick = onToggleTheme,
-//                modifier = Modifier
-//                    .background(MaterialTheme.colorScheme.primary, CircleShape)
-//            ) {
-//                Icon(
-//                    imageVector = if (isDarkTheme) Icons.Filled.Brightness7 else Icons.Filled.Brightness2,
-//                    contentDescription = "Toggle Theme",
-//                    tint = Color.White,
-//                )
-//            }
+            IconButton(
+                onClick = onToggleTheme,
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+            ) {
+                Icon(
+                    imageVector = if (isDarkTheme) Icons.Filled.Brightness7 else Icons.Filled.Brightness2,
+                    contentDescription = "Toggle Theme",
+                    tint = Color.White,
+                )
+            }
         }
     }
 }

@@ -4,7 +4,9 @@ import com.mindmemo.data.entity.MemoEntity
 import com.mindmemo.data.utils.DataStatus
 import com.mindmemo.domain.usecase.AllNoteUseCase
 import com.mindmemo.domain.usecase.GetGridSettingUseCase
+import com.mindmemo.domain.usecase.GetThemeSettingUseCase
 import com.mindmemo.domain.usecase.SaveGridSettingUseCase
+import com.mindmemo.domain.usecase.SaveThemeSettingUseCase
 import com.mindmemo.domain.usecase.SearchUseCase
 import com.mindmemo.presentation.base.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,8 +18,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val allNoteUseCase: AllNoteUseCase,
     private val searchUseCase: SearchUseCase,
-//    private val getThemeSettingUseCase: GetThemeSettingUseCase,
-//    private val saveThemeSettingUseCase: SaveThemeSettingUseCase,
     private val getGridSettingUseCase: GetGridSettingUseCase,
     private val saveGridSettingUseCase: SaveGridSettingUseCase,
 ) : ViewModelBase() {
@@ -31,12 +31,8 @@ class HomeViewModel @Inject constructor(
     private val _isGridView = MutableStateFlow(true)
     val isGridView = _isGridView.asStateFlow()
 
-//    private val _isDarkTheme = MutableStateFlow(false)
-//    val isDarkTheme = _isDarkTheme.asStateFlow()
-
     init {
         observeGridSetting()
-//        observeThemeSetting()
     }
 
     private fun observeGridSetting() = launchWithState {
@@ -45,21 +41,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-//    private fun observeThemeSetting() = launchWithState {
-//        getThemeSettingUseCase().collect { isDark ->
-//            _isDarkTheme.value = isDark
-//        }
-//    }
-
     fun toggleGridView(isGrid: Boolean) = launchWithState {
         saveGridSettingUseCase(isGrid)
         _isGridView.value = isGrid
     }
-
-//    fun toggleTheme(isDark: Boolean) = launchWithState {
-//        saveThemeSettingUseCase(isDark)
-//        _isDarkTheme.value = isDark
-//    }
 
     fun getAll() = launchWithState {
         allNoteUseCase.getAllNote().collect {
