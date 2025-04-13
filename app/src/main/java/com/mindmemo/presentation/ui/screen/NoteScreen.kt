@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(
     navController: NavController,
@@ -36,8 +36,6 @@ fun NoteScreen(
 ) {
     val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
     var priorityExpanded by remember { mutableStateOf(false) }
-    val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(noteId) {
         noteId?.let { viewModel.getDetail(it) }
@@ -45,31 +43,10 @@ fun NoteScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "BACK")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-
-                        if (noteId != null) {
-                            viewModel.updateNote(noteId)
-                        } else {
-                            viewModel.saveNote()
-                        }
-                    }) {
-                        Icon(Icons.Default.Check, contentDescription = "OK")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent
-                )
+            NoteTopAppBar(
+                noteId = noteId,
+                navController = navController,
+                viewModel = viewModel
             )
         },
         content = { padding ->
@@ -120,6 +97,88 @@ fun NoteScreen(
                 )
             }
         }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NoteTopAppBar(
+    noteId: Int?,
+    navController: NavController,
+    viewModel: NoteViewModel
+) {
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    var showMenu by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Delete Note") },
+            text = { Text("Are you sure you want to delete this note?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    if (noteId != null) {
+                        viewModel.deleteNote(noteId)
+                        navController.popBackStack()
+                    }
+                }) {
+                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
+    TopAppBar(
+        title = {},
+        navigationIcon = {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "BACK")
+            }
+        },
+        actions = {
+            IconButton(onClick = {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+
+                if (noteId != null) {
+                    viewModel.updateNote(noteId)
+                } else {
+                    viewModel.saveNote()
+                }
+            }) {
+                Icon(Icons.Default.Check, contentDescription = "OK")
+            }
+            Box {
+                IconButton(onClick = { showMenu = true }) {
+                    Icon(Icons.Default.MoreVert, contentDescription = "More")
+                }
+                DropdownMenu(
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Delete") },
+                        onClick = {
+                            showMenu = false
+                            showDeleteDialog = true
+                        }
+                    )
+                }
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Transparent,
+            scrolledContainerColor = Color.Transparent
+        )
     )
 }
 

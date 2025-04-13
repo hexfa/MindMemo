@@ -15,7 +15,7 @@ class HomeRepositoryImpl @Inject constructor(private val noteDao: MemoDao) : Hom
         return noteDao.searchNote(search)
     }
 
-    override suspend fun deleteNote(entity: MemoEntity) {
-        noteDao.deleteNote(entity)
+    override suspend fun deleteNote(noteId: Int) {
+        noteDao.deleteNote(noteId = noteId)
     }
 }

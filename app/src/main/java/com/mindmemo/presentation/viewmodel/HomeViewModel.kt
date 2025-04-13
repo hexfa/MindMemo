@@ -16,8 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val allNoteUseCase: AllNoteUseCase,
-    private val searchUseCase: SearchUseCase,
-    private val deleteUseCase: DeleteUseCase
+    private val searchUseCase: SearchUseCase
 ) : ViewModel() {
 
     private val _getAllNotes: MutableStateFlow<DataStatus<List<MemoEntity>>?> =
@@ -39,9 +38,4 @@ class HomeViewModel @Inject constructor(
             _searchNotes.value = DataStatus.success(it, it.isEmpty())
         }
     }
-
-    fun deleteNote(entity: MemoEntity) = viewModelScope.launch {
-        deleteUseCase.deleteNote(entity)
-    }
-
 }

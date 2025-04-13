@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.mindmemo.domain.usecase.DeleteUseCase
 import com.mindmemo.presentation.base.ViewModelBase
 import com.mindmemo.presentation.notification.NotificationService
 
@@ -29,7 +30,8 @@ import com.mindmemo.presentation.notification.NotificationService
 class NoteViewModel @Inject constructor(
     private val saveUseCase: SaveUseCase,
     private val updateUseCase: UpdateUseCase,
-    private val detailUseCase: DetailUseCase
+    private val detailUseCase: DetailUseCase,
+    private val deleteUseCase: DeleteUseCase
 ) : ViewModelBase() {
 
     val categoriesList = MutableLiveData<MutableList<String>>()
@@ -88,11 +90,19 @@ class NoteViewModel @Inject constructor(
 
     fun getDetail(id: Int) = viewModelScope.launch {
         detailUseCase.detailNote(id).collect { memo ->
-            _detailNote.value = DataStatus.success(memo, false)
-
-            title = memo.title
-            description = memo.disc
-            priority = memo.priority
+            if (memo != null) {
+                _detailNote.value = DataStatus.success(memo, false)
+                title = memo.title ?: ""
+                description = memo.disc
+                priority = memo.priority
+            }
         }
+    }
+
+    fun deleteNote(noteId: Int) = viewModelScope.launch {
+        deleteUseCase.deleteNote(noteId)
+        title = ""
+        description = ""
+        priority = NORMAL
     }
 }

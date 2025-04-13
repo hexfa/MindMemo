@@ -7,19 +7,20 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MemoDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveNote(entity: MemoEntity)
-
-    @Delete
-    suspend fun deleteNote(entity: MemoEntity)
 
     @Update
     suspend fun updateNote(entity: MemoEntity)
 
+    @Query("DELETE FROM $MEMO_TABLE WHERE id = :noteId")
+    suspend fun deleteNote(noteId: Int)
+
     @Query("SELECT * FROM $MEMO_TABLE")
     fun getAllNotes(): Flow<MutableList<MemoEntity>>
 
-    @Query("SELECT * FROM $MEMO_TABLE WHERE id == :id")
+    @Query("SELECT * FROM $MEMO_TABLE WHERE id = :id")
     fun getNote(id: Int): Flow<MemoEntity>
 
     @Query("SELECT * FROM $MEMO_TABLE WHERE title LIKE '%' || :title || '%' ")
