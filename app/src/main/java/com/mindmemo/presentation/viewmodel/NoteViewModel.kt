@@ -3,7 +3,6 @@ package com.mindmemo.presentation.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.MutableLiveData
 import com.mindmemo.data.entity.MemoEntity
 import com.mindmemo.data.utils.DataStatus
 import com.mindmemo.data.utils.EDUCATION
@@ -32,7 +31,7 @@ class NoteViewModel @Inject constructor(
     private val deleteUseCase: DeleteUseCase
 ) : ViewModelBase() {
 
-    val categoriesList = MutableLiveData<MutableList<String>>()
+    val categoriesList = mutableListOf(HOME, WORK, EDUCATION, HEALTH)
     val prioritiesList = mutableListOf(HIGH, NORMAL, LOW)
     private val _detailNote: MutableStateFlow<DataStatus<MemoEntity>?> = MutableStateFlow(null)
     val detailNote = _detailNote.asStateFlow()
@@ -44,6 +43,9 @@ class NoteViewModel @Inject constructor(
         private set
 
     var priority by mutableStateOf(NORMAL)
+        private set
+
+    var category by mutableStateOf(HOME)
         private set
 
     fun onTitleChanged(newTitle: String) {
@@ -60,8 +62,8 @@ class NoteViewModel @Inject constructor(
         priority = newPriority
     }
 
-    fun loadCategoriesData() = launchWithDispatchers {
-        categoriesList.postValue(mutableListOf(WORK, EDUCATION, HOME, HEALTH))
+    fun onCategorySelected(newCategory: String) {
+        category = newCategory
     }
 
     fun saveNote() = launchWithState {
@@ -70,7 +72,8 @@ class NoteViewModel @Inject constructor(
             MemoEntity(
                 title = title,
                 disc = description,
-                priority = priority
+                priority = priority,
+                category = category
             )
         )
     }
@@ -81,7 +84,8 @@ class NoteViewModel @Inject constructor(
                 id = id,
                 title = title,
                 disc = description,
-                priority = priority
+                priority = priority,
+                category = category
             )
         )
     }
@@ -90,9 +94,10 @@ class NoteViewModel @Inject constructor(
         detailUseCase.detailNote(id).collect { memo ->
             if (memo != null) {
                 _detailNote.value = DataStatus.success(memo, false)
-                title = memo.title ?: ""
+                title = memo.title
                 description = memo.disc
                 priority = memo.priority
+                category = memo.category
             }
         }
     }
@@ -102,5 +107,6 @@ class NoteViewModel @Inject constructor(
         title = ""
         description = ""
         priority = NORMAL
+        category = HOME
     }
 }
