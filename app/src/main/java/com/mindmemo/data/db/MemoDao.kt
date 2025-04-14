@@ -21,7 +21,7 @@ interface MemoDao {
     @Query("DELETE FROM $MEMO_TABLE WHERE id = :noteId")
     suspend fun deleteNote(noteId: Int)
 
-    @Query("SELECT * FROM $MEMO_TABLE")
+    @Query("SELECT * FROM $MEMO_TABLE ORDER BY id DESC")
     fun getAllNotes(): Flow<MutableList<MemoEntity>>
 
     @Query("SELECT * FROM $MEMO_TABLE WHERE id = :id")
