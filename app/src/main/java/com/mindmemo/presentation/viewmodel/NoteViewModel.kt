@@ -21,6 +21,9 @@ import com.mindmemo.presentation.notification.NotificationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,6 +51,9 @@ class NoteViewModel @Inject constructor(
     var category by mutableStateOf(HOME)
         private set
 
+    var date by mutableStateOf(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
+        private set
+
     fun onTitleChanged(newTitle: String) {
         if (newTitle.count { it == '\n' } < 2) {
             title = newTitle
@@ -73,7 +79,8 @@ class NoteViewModel @Inject constructor(
                 title = title,
                 disc = description,
                 priority = priority,
-                category = category
+                category = category,
+                dateCreated = date
             )
         )
     }
@@ -85,7 +92,8 @@ class NoteViewModel @Inject constructor(
                 title = title,
                 disc = description,
                 priority = priority,
-                category = category
+                category = category,
+                dateCreated = date
             )
         )
     }
@@ -98,6 +106,7 @@ class NoteViewModel @Inject constructor(
                 description = memo.disc
                 priority = memo.priority
                 category = memo.category
+                date = memo.dateCreated
             }
         }
     }
@@ -108,5 +117,6 @@ class NoteViewModel @Inject constructor(
         description = ""
         priority = NORMAL
         category = HOME
+        date = ""
     }
 }

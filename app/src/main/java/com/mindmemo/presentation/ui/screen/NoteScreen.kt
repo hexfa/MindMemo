@@ -44,9 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mindmemo.presentation.viewmodel.NoteViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun NoteScreen(
@@ -54,7 +51,7 @@ fun NoteScreen(
     viewModel: NoteViewModel = hiltViewModel(),
     noteId: Int?
 ) {
-    val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+    val noteDate = viewModel.date
     var priorityExpanded by remember { mutableStateOf(false) }
     var categoryExpanded by remember { mutableStateOf(false) }
 
@@ -85,7 +82,7 @@ fun NoteScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = today, modifier = Modifier.weight(1f))
+                    Text(text = noteDate, modifier = Modifier.weight(1f))
                     //priority
                     Box {
                         Text(
