@@ -41,6 +41,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -72,8 +74,11 @@ fun HomeScreen(
     themeViewModel: ThemeViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    val notesState by viewModel.getAllNotes.collectAsState(initial = null)
+    val allNotesState by viewModel.getAllNotes.collectAsState(initial = null)
     val searchState by viewModel.searchNotes.collectAsState(initial = null)
+    val categories by viewModel.categories.collectAsState(initial = emptyList())
+    val selectedTabIndex by viewModel.selectedTabIndex.collectAsState()
+    val filteredNotes by viewModel.filteredNotes.collectAsState(initial = emptyList())
     val isGrid by viewModel.isGridView.collectAsState(initial = true)
     val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
     var isSearchMode by remember { mutableStateOf(false) }
@@ -81,6 +86,7 @@ fun HomeScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(Unit) {
+        viewModel.onTabSelected(0)
         viewModel.getAll()
     }
 
@@ -92,24 +98,34 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            CustomToolbar(
-                isGrid = isGrid,
-                isDarkTheme = isDarkTheme,
-                isSearchMode = isSearchMode,
-                searchText = searchText,
-                onSearchTextChange = {
-                    searchText = it
-                    viewModel.searchNote(it)
-                },
-                onSearchClick = {
-                    if (isSearchMode) {
-                        searchText = ""
-                    }
-                    isSearchMode = !isSearchMode
-                },
-                onToggleLayout = { viewModel.toggleGridView(!isGrid) },
-                onToggleTheme = { themeViewModel.toggleTheme(!isDarkTheme) }
-            )
+            Column {
+                CustomToolbar(
+                    isGrid = isGrid,
+                    isDarkTheme = isDarkTheme,
+                    isSearchMode = isSearchMode,
+                    searchText = searchText,
+                    onSearchTextChange = {
+                        searchText = it
+                        viewModel.searchNote(it)
+                    },
+                    onSearchClick = {
+                        if (isSearchMode) {
+                            searchText = ""
+                        }
+                        isSearchMode = !isSearchMode
+                    },
+                    onToggleLayout = { viewModel.toggleGridView(!isGrid) },
+                    onToggleTheme = { themeViewModel.toggleTheme(!isDarkTheme) }
+                )
+
+                if (!isSearchMode) {
+                    CategoryTabRow(
+                        categories = categories,
+                        selectedTabIndex = selectedTabIndex,
+                        onTabSelected = { index -> viewModel.onTabSelected(index) }
+                    )
+                }
+            }
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -128,7 +144,11 @@ fun HomeScreen(
         val notes = if (searchText.isNotBlank()) {
             searchState?.data ?: emptyList()
         } else {
-            notesState?.data ?: emptyList()
+            if (selectedTabIndex == 0) {
+                allNotesState?.data ?: emptyList()
+            } else {
+                filteredNotes
+            }
         }
 
         NoteListContent(
@@ -141,6 +161,36 @@ fun HomeScreen(
         )
     }
 }
+
+@Composable
+fun CategoryTabRow(
+    categories: List<String>,
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit
+) {
+    val tabs = listOf("all") + categories
+
+    ScrollableTabRow(
+        selectedTabIndex = selectedTabIndex,
+        edgePadding = 16.dp,
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.primary
+    ) {
+        tabs.forEachIndexed { index, title ->
+            Tab(
+                selected = selectedTabIndex == index,
+                onClick = { onTabSelected(index) },
+                text = {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            )
+        }
+    }
+}
+
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -265,23 +315,23 @@ fun NoteListContent(
     modifier: Modifier = Modifier,
     isGrid: Boolean
 ) {
-    AnimatedContent(
-        targetState = isGrid,
-        transitionSpec = {
-            fadeIn() with fadeOut()
-        },
-        label = "Grid/List Animation"
-    ) { targetIsGrid ->
-        if (notes.isEmpty()) {
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(32.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("No notes yet!", style = MaterialTheme.typography.bodyLarge)
-            }
-        } else {
+    if (notes.isEmpty()) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("No notes yet!", style = MaterialTheme.typography.bodyLarge)
+        }
+    } else {
+        AnimatedContent(
+            targetState = isGrid,
+            transitionSpec = {
+                fadeIn() with fadeOut()
+            },
+            label = "Grid/List Animation"
+        ) { targetIsGrid ->
             if (targetIsGrid) {
                 LazyVerticalStaggeredGrid(
                     columns = StaggeredGridCells.Fixed(2),
