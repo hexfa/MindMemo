@@ -63,6 +63,7 @@ import androidx.navigation.NavController
 import com.mindmemo.data.entity.MemoEntity
 import com.mindmemo.data.utils.HIGH
 import com.mindmemo.data.utils.NORMAL
+import com.mindmemo.presentation.ui.navigation.NOTE
 import com.mindmemo.presentation.viewmodel.HomeViewModel
 import com.mindmemo.presentation.viewmodel.ThemeViewModel
 
@@ -113,7 +114,7 @@ fun HomeScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate("note") },
+                onClick = { navController.navigate(NOTE) },
                 shape = RoundedCornerShape(50),
                 containerColor = MaterialTheme.colorScheme.primary
             ) {

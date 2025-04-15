@@ -14,13 +14,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mindmemo.R
+import com.mindmemo.presentation.ui.navigation.HOME
+import com.mindmemo.presentation.ui.navigation.SPLASH
 
 @Composable
 fun SplashScreen(navController: NavController) {
     LaunchedEffect(Unit) {
         kotlinx.coroutines.delay(2000)
-        navController.navigate("home") {
-            popUpTo("splash") { inclusive = true }
+        navController.navigate(HOME) {
+            popUpTo(SPLASH) { inclusive = true }
         }
     }
 

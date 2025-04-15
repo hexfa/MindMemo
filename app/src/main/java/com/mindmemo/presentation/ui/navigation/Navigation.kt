@@ -1,25 +1,28 @@
 package com.mindmemo.presentation.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.*
-import androidx.navigation.compose.*
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.mindmemo.presentation.ui.screen.HomeScreen
 import com.mindmemo.presentation.ui.screen.NoteScreen
 import com.mindmemo.presentation.ui.screen.SplashScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "splash") {
-        composable("splash") {
+    NavHost(navController = navController, startDestination = SPLASH) {
+        composable(SPLASH) {
             SplashScreen(navController)
         }
 
-        composable("home") {
+        composable(HOME) {
             HomeScreen(navController = navController)
         }
 
         composable(
-            route = "note?noteId={noteId}",
+            route = "$NOTE?noteId={noteId}",
             arguments = listOf(
                 navArgument("noteId") {
                     type = NavType.IntType
