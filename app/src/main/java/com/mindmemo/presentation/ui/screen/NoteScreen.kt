@@ -16,17 +16,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -44,6 +41,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.mindmemo.presentation.ui.widget.CustomDialog
 import com.mindmemo.presentation.viewmodel.NoteViewModel
 
 @Composable
@@ -155,30 +153,44 @@ fun NoteTopAppBar(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-
     var showMenu by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    val hasChanges by viewModel.hasUnsavedChanges.collectAsState()
+    var showUnsavedChangesDialog by remember { mutableStateOf(false) }
 
     if (showDeleteDialog) {
-        AlertDialog(
-            onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Delete Note") },
-            text = { Text("Are you sure you want to delete this note?") },
+        CustomDialog(
+            title = "Delete Note",
+            description = "Are you sure you want to delete this note?",
             confirmButton = {
-                TextButton(onClick = {
-                    showDeleteDialog = false
-                    if (noteId != null) {
-                        viewModel.deleteNote(noteId)
-                        navController.popBackStack()
-                    }
-                }) {
-                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                showDeleteDialog = false
+                if (noteId != null) {
+                    viewModel.deleteNote(noteId)
+                    navController.popBackStack()
                 }
             },
-            dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Cancel")
+            onDismissRequest = { showDeleteDialog = false },
+            dismissButton = { showDeleteDialog = false })
+    }
+
+    if (showUnsavedChangesDialog) {
+        CustomDialog(
+            title = "Update Note",
+            description = "Are you sure you want to exit without saving?",
+            confirmButton = {
+                if (noteId != null) {
+                    viewModel.updateNote()
+                } else {
+                    viewModel.saveNote()
                 }
+                showUnsavedChangesDialog = false
+                navController.popBackStack()
+            },
+            dismissButton = {
+                showUnsavedChangesDialog = false
+            },
+            onDismissRequest = {
+                showUnsavedChangesDialog = false
             }
         )
     }
@@ -186,22 +198,28 @@ fun NoteTopAppBar(
     TopAppBar(
         title = {},
         navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(onClick = {
+                if (hasChanges) {
+                    showUnsavedChangesDialog = true
+                } else navController.popBackStack()
+            }) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "BACK")
             }
         },
         actions = {
-            IconButton(onClick = {
-                keyboardController?.hide()
-                focusManager.clearFocus()
+            if (hasChanges) {
+                IconButton(onClick = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
 
-                if (noteId != null) {
-                    viewModel.updateNote()
-                } else {
-                    viewModel.saveNote()
+                    if (noteId != null) {
+                        viewModel.updateNote()
+                    } else {
+                        viewModel.saveNote()
+                    }
+                }) {
+                    Icon(Icons.Default.Check, contentDescription = "OK")
                 }
-            }) {
-                Icon(Icons.Default.Check, contentDescription = "OK")
             }
             Box {
                 IconButton(onClick = { showMenu = true }) {
