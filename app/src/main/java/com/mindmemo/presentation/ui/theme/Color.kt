@@ -12,3 +12,8 @@ val Pink40 = Color(0xFF7D5260)
 
 val White = Color.White
 val Black = Color.Black
+val Gray = Color.Gray
+val Red = Color.Red
+
+val LightCardColor = Color(0xFFF0F0F0)
+val DarkCardColor = Color(0xFF303030)
