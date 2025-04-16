@@ -1,5 +1,6 @@
 package com.mindmemo.presentation.ui.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -53,9 +54,41 @@ fun NoteScreen(
     val detailNote by viewModel.detailNote.collectAsState()
     var priorityExpanded by remember { mutableStateOf(false) }
     var categoryExpanded by remember { mutableStateOf(false) }
+    val hasChanges by viewModel.hasUnsavedChanges.collectAsState()
+    var showUnsavedChangesDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(noteId) {
         noteId?.let { viewModel.getDetail(it) }
+    }
+
+    BackHandler {
+        if (hasChanges) {
+            showUnsavedChangesDialog = true
+        } else {
+            navController.popBackStack()
+        }
+    }
+
+    if (showUnsavedChangesDialog) {
+        CustomDialog(
+            title = "Update Note",
+            description = "Are you sure you want to exit without saving?",
+            confirmButton = {
+                if (noteId != null) {
+                    viewModel.updateNote()
+                } else {
+                    viewModel.saveNote()
+                }
+                showUnsavedChangesDialog = false
+                navController.popBackStack()
+            },
+            dismissButton = {
+                showUnsavedChangesDialog = false
+            },
+            onDismissRequest = {
+                showUnsavedChangesDialog = false
+            }
+        )
     }
 
     Scaffold(
