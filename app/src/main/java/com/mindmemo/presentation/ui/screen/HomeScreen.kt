@@ -355,7 +355,7 @@ fun NoteItem(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = note.disc,
+                    text = note.description,
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))

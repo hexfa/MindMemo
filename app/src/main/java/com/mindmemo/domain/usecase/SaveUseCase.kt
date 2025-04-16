@@ -6,5 +6,5 @@ import javax.inject.Inject
 
 class SaveUseCase @Inject constructor(private val noteRepository: NoteRepository) {
 
-    suspend fun saveNote(noteEntity: MemoEntity) = noteRepository.saveNote(noteEntity)
+    suspend fun saveNote(noteEntity: MemoEntity): Long = noteRepository.saveNote(noteEntity)
 }

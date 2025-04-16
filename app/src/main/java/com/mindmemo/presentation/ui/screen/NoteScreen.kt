@@ -31,6 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,7 +52,7 @@ fun NoteScreen(
     viewModel: NoteViewModel = hiltViewModel(),
     noteId: Int?
 ) {
-    val noteDate = viewModel.date
+    val detailNote by viewModel.detailNote.collectAsState()
     var priorityExpanded by remember { mutableStateOf(false) }
     var categoryExpanded by remember { mutableStateOf(false) }
 
@@ -75,18 +76,18 @@ fun NoteScreen(
                     .fillMaxSize()
             ) {
                 FlatTextField(
-                    value = viewModel.title,
+                    value = detailNote.title,
                     onValueChange = viewModel::onTitleChanged,
                     hint = "Title ...",
                     maxLines = 2
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = noteDate, modifier = Modifier.weight(1f))
+                    Text(text = detailNote.dateCreated, modifier = Modifier.weight(1f))
                     //priority
                     Box {
                         Text(
-                            text = viewModel.priority,
+                            text = detailNote.priority,
                             modifier = Modifier
                                 .clickable { priorityExpanded = true }
                                 .background(Color.LightGray, shape = RoundedCornerShape(4.dp))
@@ -111,7 +112,7 @@ fun NoteScreen(
                     // Category
                     Box {
                         Text(
-                            text = viewModel.category,
+                            text = detailNote.category,
                             modifier = Modifier
                                 .clickable { categoryExpanded = true }
                                 .background(Color.LightGray, shape = RoundedCornerShape(4.dp))
@@ -136,7 +137,7 @@ fun NoteScreen(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 FlatTextField(
-                    value = viewModel.description,
+                    value = detailNote.description,
                     onValueChange = viewModel::onDescriptionChanged,
                     hint = "Description ..."
                 )
@@ -195,7 +196,7 @@ fun NoteTopAppBar(
                 focusManager.clearFocus()
 
                 if (noteId != null) {
-                    viewModel.updateNote(noteId)
+                    viewModel.updateNote()
                 } else {
                     viewModel.saveNote()
                 }

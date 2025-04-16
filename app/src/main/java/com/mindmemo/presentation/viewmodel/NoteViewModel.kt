@@ -1,10 +1,6 @@
 package com.mindmemo.presentation.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import com.mindmemo.data.entity.MemoEntity
-import com.mindmemo.data.utils.DataStatus
 import com.mindmemo.data.utils.EDUCATION
 import com.mindmemo.data.utils.HEALTH
 import com.mindmemo.data.utils.HIGH
@@ -36,87 +32,80 @@ class NoteViewModel @Inject constructor(
 
     val categoriesList = mutableListOf(HOME, WORK, EDUCATION, HEALTH)
     val prioritiesList = mutableListOf(HIGH, NORMAL, LOW)
-    private val _detailNote: MutableStateFlow<DataStatus<MemoEntity>?> = MutableStateFlow(null)
+    private val _detailNote: MutableStateFlow<MemoEntity> =
+        MutableStateFlow(
+            MemoEntity(
+                0,
+                "",
+                "",
+                HOME,
+                NORMAL,
+                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            )
+        )
     val detailNote = _detailNote.asStateFlow()
-
-    var title by mutableStateOf("")
-        private set
-
-    var description by mutableStateOf("")
-        private set
-
-    var priority by mutableStateOf(NORMAL)
-        private set
-
-    var category by mutableStateOf(HOME)
-        private set
-
-    var date by mutableStateOf(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()))
-        private set
 
     fun onTitleChanged(newTitle: String) {
         if (newTitle.count { it == '\n' } < 2) {
-            title = newTitle
+            updateNote(title = newTitle)
         }
     }
 
     fun onDescriptionChanged(newDescription: String) {
-        description = newDescription
+        updateNote(description = newDescription)
     }
 
     fun onPrioritySelected(newPriority: String) {
-        priority = newPriority
+        updateNote(priority = newPriority)
     }
 
     fun onCategorySelected(newCategory: String) {
-        category = newCategory
+        updateNote(category = newCategory)
     }
 
     fun saveNote() = launchWithState {
-        if (description.isEmpty()) NotificationService.showError("Please Enter Description")
-        else saveUseCase.saveNote(
-            MemoEntity(
-                title = title,
-                disc = description,
-                priority = priority,
-                category = category,
-                dateCreated = date
-            )
-        )
+        if (detailNote.value.description.isEmpty()) NotificationService.showError("Please Enter Description")
+        else {
+            val createId: Long = saveUseCase.saveNote(detailNote.value)
+            updateNote(id = createId.toInt())
+        }
     }
 
-    fun updateNote(id: Int) = launchWithState {
+    fun updateNote() = launchWithState {
         updateUseCase.updateNote(
-            MemoEntity(
-                id = id,
-                title = title,
-                disc = description,
-                priority = priority,
-                category = category,
-                dateCreated = date
-            )
+            detailNote.value
         )
     }
 
     fun getDetail(id: Int) = launchWithState {
         detailUseCase.detailNote(id).collect { memo ->
             if (memo != null) {
-                _detailNote.value = DataStatus.success(memo, false)
-                title = memo.title
-                description = memo.disc
-                priority = memo.priority
-                category = memo.category
-                date = memo.dateCreated
+                _detailNote.value = memo.copy()
             }
         }
     }
 
     fun deleteNote(noteId: Int) = launchWithState {
         deleteUseCase.deleteNote(noteId)
-        title = ""
-        description = ""
-        priority = NORMAL
-        category = HOME
-        date = ""
+//        updateNote()
+    }
+
+    private fun updateNote(
+        id: Int? = null,
+        title: String? = null,
+        description: String? = null,
+        priority: String? = null,
+        category: String? = null,
+        date: String? = null
+    ) {
+        val current = _detailNote.value
+        _detailNote.value = current.copy(
+            id = id ?: current.id,
+            title = title ?: current.title,
+            description = description ?: current.description,
+            priority = priority ?: current.priority,
+            category = category ?: current.category,
+            dateCreated = date ?: current.dateCreated
+        )
     }
 }

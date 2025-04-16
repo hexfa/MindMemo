@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 interface MemoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveNote(entity: MemoEntity)
+    suspend fun saveNote(entity: MemoEntity): Long
 
     @Update
     suspend fun updateNote(entity: MemoEntity)
@@ -27,7 +27,7 @@ interface MemoDao {
     @Query("SELECT * FROM $MEMO_TABLE WHERE id = :id")
     fun getNote(id: Int): Flow<MemoEntity>
 
-    @Query("SELECT * FROM $MEMO_TABLE WHERE title LIKE '%' || :query || '%' OR disc LIKE '%' || :query || '%'")
+    @Query("SELECT * FROM $MEMO_TABLE WHERE title LIKE '%' || :query || '%' OR description LIKE '%' || :query || '%'")
     fun searchNote(query: String): Flow<MutableList<MemoEntity>>
 
 }
