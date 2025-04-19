@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import com.mindmemo.presentation.ui.theme.Green
 
 @Composable
 fun CustomDialog(
@@ -25,7 +26,7 @@ fun CustomDialog(
                 onClick = {
                     confirmButton()
                 }) {
-                Text("OK", color = MaterialTheme.colorScheme.error)
+                Text("OK", color = Green)
             }
         },
         dismissButton = {
@@ -34,7 +35,7 @@ fun CustomDialog(
                     dismissButton()
                 }
             ) {
-                Text("Cancel")
+                Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     )

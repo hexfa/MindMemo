@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
@@ -74,7 +73,7 @@ import com.mindmemo.data.utils.NORMAL
 import com.mindmemo.data.utils.WORK
 import com.mindmemo.presentation.notification.NotificationService
 import com.mindmemo.presentation.ui.navigation.NOTE
-import com.mindmemo.presentation.ui.theme.Gray
+import com.mindmemo.presentation.ui.widget.CustomCircleIcon
 import com.mindmemo.presentation.viewmodel.HomeViewModel
 import com.mindmemo.presentation.viewmodel.ThemeViewModel
 
@@ -245,30 +244,17 @@ fun CustomToolbar(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = onSearchClick,
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.onBackground, CircleShape)
-            ) {
-                Icon(
-                    Icons.Default.Search,
-                    contentDescription = "Search",
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            Box {
-                IconButton(
-                    onClick = { expanded = true },
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.onBackground, CircleShape)
-                ) {
-                    Icon(
-                        Icons.Default.MoreVert,
-                        contentDescription = "More",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+            CustomCircleIcon(
+                icon = Icons.Default.Search,
+                description = "Search",
+                onClick = onSearchClick
+            )
 
+            Box {
+                CustomCircleIcon(
+                    icon = Icons.Default.MoreVert,
+                    description = "More",
+                    onClick = { expanded = true })
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
@@ -428,7 +414,7 @@ fun NoteItem(
                 ) {
                     Text(
                         text = note.dateCreated,
-                        color = Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Icon(

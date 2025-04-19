@@ -11,18 +11,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -42,6 +45,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.mindmemo.presentation.ui.widget.CustomCircleIcon
 import com.mindmemo.presentation.ui.widget.CustomDialog
 import com.mindmemo.presentation.viewmodel.NoteViewModel
 
@@ -114,19 +118,41 @@ fun NoteScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = detailNote.dateCreated, modifier = Modifier.weight(1f))
+                    Text(
+                        text = detailNote.dateCreated,
+                        modifier = Modifier.weight(1f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                     //priority
                     Box {
-                        Text(
-                            text = detailNote.priority,
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .clickable { priorityExpanded = true }
-                                .background(Color.LightGray, shape = RoundedCornerShape(4.dp))
-                                .padding(horizontal = 12.dp, vertical = 8.dp)
-                        )
+                                .background(
+                                    MaterialTheme.colorScheme.onTertiaryContainer,
+                                    shape = RoundedCornerShape(4.dp)
+                                )
+                                .padding(
+                                    horizontal = 8
+                                        .dp, vertical = 4.dp
+                                )
+                        ) {
+                            Text(
+                                text = detailNote.priority,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "Expand Priority",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
                         DropdownMenu(
                             expanded = priorityExpanded,
-                            onDismissRequest = { priorityExpanded = false }
+                            onDismissRequest = { priorityExpanded = false },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
                         ) {
                             viewModel.prioritiesList.forEach { item ->
                                 DropdownMenuItem(
@@ -139,20 +165,35 @@ fun NoteScreen(
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
                     // Category
                     Box {
-                        Text(
-                            text = detailNote.category,
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .clickable { categoryExpanded = true }
-                                .background(Color.LightGray, shape = RoundedCornerShape(4.dp))
-                                .padding(horizontal = 12.dp, vertical = 8.dp)
-                        )
+                                .background(
+                                    MaterialTheme.colorScheme.onTertiaryContainer,
+                                    shape = RoundedCornerShape(4.dp)
+                                )
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = detailNote.category,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "Expand Category",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
 
                         DropdownMenu(
                             expanded = categoryExpanded,
-                            onDismissRequest = { categoryExpanded = false }
+                            onDismissRequest = { categoryExpanded = false },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
                         ) {
                             viewModel.categoriesList.forEach { item ->
                                 DropdownMenuItem(
@@ -228,55 +269,63 @@ fun NoteTopAppBar(
         )
     }
 
-    TopAppBar(
-        title = {},
-        navigationIcon = {
-            IconButton(onClick = {
+    Box(modifier = Modifier.padding(12.dp)) {
+        TopAppBar(
+            title = {},
+            navigationIcon = {
+                CustomCircleIcon(icon = Icons.Filled.ArrowLeft, description = "BACK", onClick = {
+                    if (hasChanges) {
+                        showUnsavedChangesDialog = true
+                    } else navController.popBackStack()
+                })
+            },
+            actions = {
                 if (hasChanges) {
-                    showUnsavedChangesDialog = true
-                } else navController.popBackStack()
-            }) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "BACK")
-            }
-        },
-        actions = {
-            if (hasChanges) {
-                IconButton(onClick = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
+                    CustomCircleIcon(icon = Icons.Default.Check, description = "OK", onClick = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
 
-                    if (noteId != null) {
-                        viewModel.updateNote()
-                    } else {
-                        viewModel.saveNote()
-                    }
-                }) {
-                    Icon(Icons.Default.Check, contentDescription = "OK")
-                }
-            }
-            Box {
-                IconButton(onClick = { showMenu = true }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "More")
-                }
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Delete") },
-                        onClick = {
-                            showMenu = false
-                            showDeleteDialog = true
+                        if (noteId != null) {
+                            viewModel.updateNote()
+                        } else {
+                            viewModel.saveNote()
                         }
-                    )
+                    })
+
                 }
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent,
-            scrolledContainerColor = Color.Transparent
+                Spacer(modifier = Modifier.width(8.dp))
+                Box {
+                    CustomCircleIcon(
+                        icon = Icons.Default.MoreVert,
+                        description = "More",
+                        onClick = { showMenu = true })
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false },
+                        modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Delete") },
+                            onClick = {
+                                showMenu = false
+                                showDeleteDialog = true
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.DeleteOutline,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                    }
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent,
+                scrolledContainerColor = Color.Transparent
+            )
         )
-    )
+    }
 }
 
 @Composable
@@ -296,7 +345,7 @@ fun FlatTextField(
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             maxLines = maxLines,
-            textStyle = LocalTextStyle.current.copy(color = Color.Black),
+            textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface),
             decorationBox = { innerTextField ->
                 if (value.isEmpty()) {
                     Text(
