@@ -6,8 +6,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.mindmemo.presentation.ui.screen.HomeScreen
-import com.mindmemo.presentation.ui.screen.NoteScreen
+import com.mindmemo.presentation.ui.screen.home.HomeScreen
+import com.mindmemo.presentation.ui.screen.note.NoteScreen
 import com.mindmemo.presentation.ui.screen.SplashScreen
 
 @Composable
