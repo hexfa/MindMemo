@@ -103,6 +103,8 @@ dependencies {
     //test
     testImplementation 'junit:junit:4.13.2'
     testImplementation "io.mockk:mockk:1.13.10"
+    // build.gradle (Module)
+    testImplementation("app.cash.turbine:turbine:1.0.0")
     testImplementation "androidx.compose.ui:ui-test-junit4:1.7.8"
     androidTestImplementation("androidx.navigation:navigation-testing:<latest-version>")
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
