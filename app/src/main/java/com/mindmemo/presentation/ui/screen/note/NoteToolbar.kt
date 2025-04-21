@@ -22,8 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.mindmemo.R
 import com.mindmemo.presentation.ui.widget.CustomCircleIcon
 import com.mindmemo.presentation.ui.widget.CustomDropdownMenu
 import com.mindmemo.presentation.ui.widget.DropdownMenuItemData
@@ -74,7 +76,7 @@ fun NoteTopAppBar(
             navigationIcon = {
                 CustomCircleIcon(
                     icon = Icons.Filled.ArrowLeft,
-                    description = "BACK",
+                    description = stringResource(id = R.string.back),
                     onClick = {
                         if (hasChanges) {
                             showUnsavedChangesDialog = true
@@ -88,7 +90,7 @@ fun NoteTopAppBar(
                 if (hasChanges) {
                     CustomCircleIcon(
                         icon = Icons.Default.Check,
-                        description = "OK",
+                        description = stringResource(id = R.string.ok),
                         onClick = {
                             keyboardController?.hide()
                             focusManager.clearFocus()
@@ -105,7 +107,7 @@ fun NoteTopAppBar(
                 Box {
                     CustomCircleIcon(
                         icon = Icons.Default.MoreVert,
-                        description = "More",
+                        description = stringResource(id = R.string.more),
                         onClick = { showMenu = true }
                     )
 
@@ -114,9 +116,9 @@ fun NoteTopAppBar(
                         onDismissRequest = { showMenu = false },
                         menuItems = listOf(
                             DropdownMenuItemData(
-                                text = "Delete",
+                                text = stringResource(id = R.string.delete),
                                 icon = Icons.Default.DeleteOutline,
-                                contentDescription = "Delete",
+                                contentDescription = stringResource(id = R.string.delete),
                                 onClick = {
                                     showMenu = false
                                     showDeleteDialog = true

@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mindmemo.R
@@ -34,7 +35,7 @@ fun SplashScreen(navController: NavController) {
     ) {
         Icon(
             painter = painterResource(id = R.drawable.note),
-            contentDescription = "Note",
+            contentDescription = stringResource(id = R.string.note),
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(100.dp)
         )

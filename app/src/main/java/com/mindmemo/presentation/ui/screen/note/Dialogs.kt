@@ -1,6 +1,8 @@
 package com.mindmemo.presentation.ui.screen.note
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.mindmemo.R
 import com.mindmemo.presentation.ui.widget.CustomDialog
 
 @Composable
@@ -11,8 +13,8 @@ fun DeleteNoteDialog(
 ) {
     if (showDialog) {
         CustomDialog(
-            title = "Delete Note",
-            description = "Are you sure you want to delete this note?",
+            title = stringResource(id = R.string.delete_note),
+            description = stringResource(id = R.string.are_you_sure_you_want_to_delete_this_note),
             confirmButton = onConfirm,
             dismissButton = onDismiss,
             onDismissRequest = onDismiss
@@ -28,8 +30,8 @@ fun UnsavedChangesDialog(
 ) {
     if (showDialog) {
         CustomDialog(
-            title = "Update Note",
-            description = "Are you sure you want to exit without saving?",
+            title = stringResource(id = R.string.update_note),
+            description = stringResource(id = R.string.are_you_sure_you_want_to_exit_without_saving),
             confirmButton = onConfirm,
             dismissButton = onDismiss,
             onDismissRequest = onDismiss

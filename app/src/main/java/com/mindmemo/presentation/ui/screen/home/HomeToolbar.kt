@@ -33,9 +33,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mindmemo.R
 import com.mindmemo.presentation.ui.widget.CustomCircleIcon
 import com.mindmemo.presentation.ui.widget.CustomDropdownMenu
 import com.mindmemo.presentation.ui.widget.DropdownMenuItemData
@@ -68,7 +70,7 @@ fun HomeToolbar(
             AnimatedContent(
                 targetState = isSearchMode,
                 transitionSpec = { fadeIn() with fadeOut() },
-                label = "Search vs Title"
+                label = stringResource(id = R.string.search_vs_title)
             ) { targetIsSearch ->
                 if (targetIsSearch) {
                     Row(
@@ -100,7 +102,7 @@ fun HomeToolbar(
                             }) {
                                 Icon(
                                     Icons.Default.Close,
-                                    contentDescription = "Clear Search",
+                                    contentDescription = stringResource(id = R.string.clear_search),
                                     tint = MaterialTheme.colorScheme.error
                                 )
                             }
@@ -117,7 +119,7 @@ fun HomeToolbar(
                             .padding(horizontal = 16.dp, vertical = 16.dp)
                     ) {
                         Text(
-                            "Notes",
+                            stringResource(id = R.string.notes),
                             color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.titleLarge
                         )
@@ -131,31 +133,31 @@ fun HomeToolbar(
         ) {
             CustomCircleIcon(
                 icon = Icons.Default.Search,
-                description = "Search",
+                description = stringResource(id = R.string.search),
                 onClick = onSearchClick
             )
             Box {
                 CustomCircleIcon(
                     icon = Icons.Default.MoreVert,
-                    description = "More",
+                    description = stringResource(id = R.string.more),
                     onClick = { expanded = true })
                 CustomDropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                     menuItems = listOf(
                         DropdownMenuItemData(
-                            text = "Toggle Layout",
+                            text = stringResource(id = R.string.toggle_layout),
                             icon = if (isGrid) Icons.Filled.ViewList else Icons.Filled.GridView,
-                            contentDescription = "Grid/List",
+                            contentDescription = stringResource(id = R.string.grid_list),
                             onClick = {
                                 expanded = false
                                 onToggleLayout()
                             }
                         ),
                         DropdownMenuItemData(
-                            text = "Toggle Theme",
+                            text = stringResource(id = R.string.toggle_theme),
                             icon = if (isDarkTheme) Icons.Filled.Brightness7 else Icons.Filled.Brightness2,
-                            contentDescription = "Theme",
+                            contentDescription = stringResource(id = R.string.theme),
                             onClick = {
                                 expanded = false
                                 onToggleTheme()

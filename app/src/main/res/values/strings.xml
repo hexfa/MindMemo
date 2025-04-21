@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">NoteAppCleanArchitecture</string>
+    <string name="add_note">Add Note</string>
+    <string name="search_vs_title">Search vs Title</string>
+    <string name="clear_search">Clear Search</string>
+    <string name="notes">Notes</string>
+    <string name="note">Note</string>
+    <string name="search">Search</string>
+    <string name="more">More</string>
+    <string name="toggle_layout">Toggle Layout</string>
+    <string name="grid_list">Grid/List</string>
+    <string name="theme">Theme</string>
+    <string name="toggle_theme">Toggle Theme</string>
+    <string name="no_notes_yet">No notes yet!</string>
+    <string name="grid_list_anim">Grid/List Animation</string>
+    <string name="delete_note">Delete Note</string>
+    <string name="are_you_sure_you_want_to_delete_this_note">Are you sure you want to delete this note?</string>
+    <string name="update_note">Update Note</string>
+    <string name="are_you_sure_you_want_to_exit_without_saving">Are you sure you want to exit without saving?</string>
+    <string name="title">Title</string>
+    <string name="expand_priority">Expand Priority</string>
+    <string name="expand_category">Expand Category</string>
+    <string name="description">Description</string>
+    <string name="back">BACK</string>
+    <string name="ok">OK</string>
+    <string name="delete">Delete</string>
 </resources>

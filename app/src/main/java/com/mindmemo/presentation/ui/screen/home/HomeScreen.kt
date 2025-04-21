@@ -18,9 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.mindmemo.R
 import com.mindmemo.presentation.ui.navigation.NOTE
 import com.mindmemo.presentation.viewmodel.HomeViewModel
 import com.mindmemo.presentation.viewmodel.ThemeViewModel
@@ -78,7 +80,7 @@ fun HomeScreen(
             ) {
                 Icon(
                     Icons.Default.Add,
-                    contentDescription = "Add Note",
+                    contentDescription = stringResource(id = R.string.add_note),
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }

@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">یادداشت</string>
+    <string name="add_note">افزودن یادداشت</string>
+    <string name="search_vs_title">جستجو در عنوان</string>
+    <string name="clear_search">پاک کردن جستجو</string>
+    <string name="notes">یادداشت‌ها</string>
+    <string name="note">یادداشت</string>
+    <string name="search">جستجو</string>
+    <string name="more">بیشتر</string>
+    <string name="toggle_layout">تغییر چیدمان</string>
+    <string name="grid_list">شبکه‌ای/لیستی</string>
+    <string name="theme">تم</string>
+    <string name="toggle_theme">تغییر تم</string>
+    <string name="no_notes_yet">هنوز یادداشتی وجود ندارد!</string>
+    <string name="grid_list_anim">انیمیشن شبکه‌ای/لیستی</string>
+    <string name="delete_note">حذف یادداشت</string>
+    <string name="are_you_sure_you_want_to_delete_this_note">آیا مطمئن هستید که می‌خواهید این یادداشت را حذف کنید؟</string>
+    <string name="update_note">ویرایش یادداشت</string>
+    <string name="are_you_sure_you_want_to_exit_without_saving">آیا مطمئن هستید که می‌خواهید بدون ذخیره خارج شوید؟</string>
+    <string name="title">عنوان</string>
+    <string name="expand_priority">انتخاب اولویت</string>
+    <string name="expand_category">انتخاب دسته‌بندی</string>
+    <string name="description">توضیحات</string>
+    <string name="back">بازگشت</string>
+    <string name="ok">تأیید</string>
+    <string name="delete">حذف</string>
+</resources>

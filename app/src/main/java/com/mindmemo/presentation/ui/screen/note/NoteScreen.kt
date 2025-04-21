@@ -31,9 +31,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.mindmemo.R
 import com.mindmemo.presentation.ui.widget.CustomDialog
 import com.mindmemo.presentation.ui.widget.CustomDropdownMenu
 import com.mindmemo.presentation.ui.widget.DropdownMenuItemData
@@ -65,8 +67,8 @@ fun NoteScreen(
 
     if (showUnsavedChangesDialog) {
         CustomDialog(
-            title = "Update Note",
-            description = "Are you sure you want to exit without saving?",
+            title = stringResource(id = R.string.update_note),
+            description = stringResource(id = R.string.are_you_sure_you_want_to_exit_without_saving),
             confirmButton = {
                 if (noteId != null) {
                     viewModel.updateNote()
@@ -103,7 +105,7 @@ fun NoteScreen(
                 FlatTextField(
                     value = detailNote.title,
                     onValueChange = viewModel::onTitleChanged,
-                    hint = "Title ...",
+                    hint = "${stringResource(id = R.string.title)} ...",
                     maxLines = 2
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -135,7 +137,7 @@ fun NoteScreen(
                             Spacer(modifier = Modifier.width(4.dp))
                             Icon(
                                 imageVector = Icons.Default.ArrowDropDown,
-                                contentDescription = "Expand Priority",
+                                contentDescription = stringResource(id = R.string.expand_priority),
                                 tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
@@ -173,7 +175,7 @@ fun NoteScreen(
                             Spacer(modifier = Modifier.width(4.dp))
                             Icon(
                                 imageVector = Icons.Default.ArrowDropDown,
-                                contentDescription = "Expand Category",
+                                contentDescription = stringResource(id = R.string.expand_category),
                                 tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
@@ -197,7 +199,7 @@ fun NoteScreen(
                 FlatTextField(
                     value = detailNote.description,
                     onValueChange = viewModel::onDescriptionChanged,
-                    hint = "Description ..."
+                    hint = "${stringResource(id = R.string.description)} ..."
                 )
             }
         }
