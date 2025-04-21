@@ -113,4 +113,5 @@ dependencies {
     //hilt test
     androidTestImplementation "com.google.dagger:hilt-android-testing:2.48"
     kaptAndroidTest "com.google.dagger:hilt-compiler:2.48"
+    implementation "org.jetbrains.kotlin:kotlin-test:1.9.22"
 }
